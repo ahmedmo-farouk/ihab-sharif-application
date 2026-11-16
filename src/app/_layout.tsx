@@ -1,18 +1,52 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from 'expo-router';
-import * as SplashScreen from 'expo-splash-screen';
-import { useColorScheme } from 'react-native';
+import {
+  Cairo_400Regular,
+  Cairo_700Bold,
+} from "@expo-google-fonts/cairo";
+import { useFonts } from "expo-font";
+import { Stack, ThemeProvider, DarkTheme, DefaultTheme } from "expo-router";
+import * as SplashScreen from "expo-splash-screen";
+import { StatusBar } from "expo-status-bar";
+import { useEffect } from "react";
+import { I18nManager } from "react-native";
 
-import { AnimatedSplashOverlay } from '@/components/animated-icon';
-import AppTabs from '@/components/app-tabs';
+import { FONT_BOLD } from "@/constants/fonts";
+import { useTheme } from "@/hooks/useTheme";
 
-SplashScreen.preventAutoHideAsync();
+I18nManager.allowRTL(true);
+I18nManager.forceRTL(true);
+void SplashScreen.preventAutoHideAsync();
 
-export default function TabLayout() {
-  const colorScheme = useColorScheme();
+export default function RootLayout() {
+  const [fontsLoaded] = useFonts({ Cairo_400Regular, Cairo_700Bold });
+  const { colors, fontScale, isDark } = useTheme();
+
+  useEffect(() => {
+    if (fontsLoaded) void SplashScreen.hideAsync();
+  }, [fontsLoaded]);
+
+  if (!fontsLoaded) return null;
+
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <AnimatedSplashOverlay />
-      <AppTabs />
+    <ThemeProvider value={isDark ? DarkTheme : DefaultTheme}>
+      <StatusBar style="light" />
+      <Stack
+        screenOptions={{
+          contentStyle: { backgroundColor: colors.background },
+          headerStyle: { backgroundColor: colors.headerBg },
+          headerTintColor: colors.headerText,
+          headerShadowVisible: false,
+          headerTitleStyle: {
+            color: colors.headerText,
+            fontFamily: FONT_BOLD,
+            fontSize: 16 * fontScale,
+          },
+          headerBackTitle: "رجوع",
+        }}
+      >
+        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        <Stack.Screen name="playlist/[id]" options={{ title: "قائمة التشغيل" }} />
+        <Stack.Screen name="video/[id]" options={{ title: "الفيديو" }} />
+      </Stack>
     </ThemeProvider>
   );
 }
