@@ -1,56 +1,37 @@
-# Welcome to your Expo app 👋
+# مكتبة فيديوهات القناة
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+تطبيق Expo عربي لعرض فيديوهات قناة YouTube، تصفح قوائم التشغيل والبحث محليًا، مع حفظ المفضلة وتقدم المشاهدة على الجهاز. يتضمن أيضًا صفحة «ابن الهيثم» للبحث في روابط الدروس الصوتية.
 
-## Get started
-
-1. Install dependencies
-
-   ```bash
-   npm install
-   ```
-
-2. Start the app
-
-   ```bash
-   npx expo start
-   ```
-
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **src/app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
+## الإعداد
 
 ```bash
-npm run reset-project
+npm install
+npx expo install @expo-google-fonts/cairo
 ```
 
-This command will move the starter code to the **example** directory and create a blank **src/app** directory where you can start developing.
+أنشئ ملف `.env` في جذر المشروع وضع مفتاح YouTube Data API v3 فيه:
 
-### Other setup steps
+```env
+EXPO_PUBLIC_YT_KEY=your_youtube_data_api_key
+```
 
-- To set up ESLint for linting, run `npx expo lint`, or follow our guide on ["Using ESLint and Prettier"](https://docs.expo.dev/guides/using-eslint/)
-- If you'd like to set up unit testing, follow our guide on ["Unit Testing with Jest"](https://docs.expo.dev/develop/unit-testing/)
-- Learn more about the TypeScript setup in this template in our guide on ["Using TypeScript"](https://docs.expo.dev/guides/typescript/)
+ملف `.env` مستثنى من Git. لا تضع المفتاح في الشيفرة أو تشاركه؛ مفتاح `EXPO_PUBLIC_` مضمن في تطبيق العميل، لذا قيّده في Google Cloud Console بتطبيقك وحصة YouTube Data API.
 
-## Learn more
+## التشغيل
 
-To learn more about developing your project with Expo, look at the following resources:
+```bash
+npx expo start -c
+```
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+افتح التطبيق باستخدام Expo Go على جهاز iOS أو Android. بعد تفعيل RTL لأول مرة، أعد تشغيل Expo Go إذا لم يتغير اتجاه الواجهة فورًا.
 
-## Join the community
+## تحديث روابط الدروس الصوتية
 
-Join our community of developers creating universal apps.
+بعد تحديث `lectures.csv`، أعد بناء بيانات صفحة «ابن الهيثم» بالأمر:
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+```bash
+npm run build:audio-catalog
+```
+
+يتحقق الأمر من أن جميع روابط MP3 تستخدم HTTPS، ويتوقف قبل تحديث الكتالوج إذا وجد روابط غير آمنة. حدّث روابط المصدر إلى عناوين HTTPS مؤكدة يدويًا؛ لا يحوّلها الأمر تلقائيًا.
+# ihab-sharif-application
